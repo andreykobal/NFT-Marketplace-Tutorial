@@ -1,3 +1,4 @@
+require("dotenv").config();
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-ethers");
 const fs = require('fs');
@@ -26,8 +27,8 @@ module.exports = {
       //accounts: [process.env.privateKey]
     },
     goerli: {
-      url: process.env.REACT_APP_ALCHEMY_API_URL,
-      accounts: [ process.env.REACT_APP_PRIVATE_KEY ]
+      url: "https://ethereum-goerli.publicnode.com",
+      accounts: [process.env.privateKey, process.env.privateKey2]
     }
   },
   solidity: {
