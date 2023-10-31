@@ -29,14 +29,14 @@ async function main() {
     console.log(`Wallet 2 has bought the NFT with tokenId: ${tokenId.toString()}`);
 
     // Step 3: Wallet 2 updates the token price by 10%
-    const updatedPrice = ethers.utils.parseEther("0.0011");
+    let updatedPrice = ethers.utils.parseEther("0.0011");
     console.log("Wallet 2 is updating the token price...");
     const tx3 = await marketplaceContractWithWallet2.updateTokenPrice(tokenId, updatedPrice);
     await tx3.wait();
     console.log(`Token price updated to: ${ethers.utils.formatEther(updatedPrice)} ETH`);
 
     // Step 4: Wallet 2 lists the token for sale
-    const listPrice = await marketplaceContractWithWallet2.getListPrice();
+    let listPrice = await marketplaceContractWithWallet2.getListPrice();
     console.log("Wallet 2 is listing the NFT for sale...");
     const tx4 = await marketplaceContractWithWallet2.listTokenForSale(tokenId, updatedPrice, { value: listPrice });
     await tx4.wait();
@@ -50,7 +50,7 @@ async function main() {
         value: ethers.utils.parseEther("0.015"),
     });
     await tx5.wait();
-    console.log(`0.15 ETH sent to Wallet 3 at address: ${wallet3.address}`);
+    console.log(`0.015 ETH sent to Wallet 3 at address: ${wallet3.address}`);
 
     // Step 6: Wallet 3 buys the token from Wallet 2
     const marketplaceContractWithWallet3 = await ethers.getContractAt("NFTMarketplace", marketplaceAddress, wallet3);
@@ -58,6 +58,22 @@ async function main() {
     const tx6 = await marketplaceContractWithWallet3.executeSale(tokenId, { value: updatedPrice });
     await tx6.wait();
     console.log(`Wallet 3 has bought the NFT with tokenId: ${tokenId.toString()}`);
+
+    // Step 7: Wallet 3 updates the token price by 10%
+    updatedPrice = ethers.utils.parseEther("0.0012");
+    console.log("Wallet 3 is updating the token price...");
+    const tx7 = await marketplaceContractWithWallet3.updateTokenPrice(tokenId, updatedPrice);
+    await tx7.wait();
+    console.log(`Token price updated to: ${ethers.utils.formatEther(updatedPrice)} ETH`);
+
+    // Step 8: Wallet 3 lists the token for sale
+    listPrice = await marketplaceContractWithWallet3.getListPrice();
+    console.log("Wallet 3 is listing the NFT for sale...");
+    const tx8 = await marketplaceContractWithWallet3.listTokenForSale(tokenId, updatedPrice, { value: listPrice });
+    await tx8.wait();
+    console.log(`NFT listed for sale with new price: ${ethers.utils.formatEther(updatedPrice)} ETH`);
+
+    
 }
 
 main()
