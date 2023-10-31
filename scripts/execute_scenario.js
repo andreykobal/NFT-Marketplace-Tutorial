@@ -43,7 +43,7 @@ async function main() {
     console.log(`NFT listed for sale with new price: ${ethers.utils.formatEther(updatedPrice)} ETH`);
 
     // Step 5: Create Wallet 3 at runtime and send 0.15 ETH from Wallet 1 to Wallet 3
-    console.log("Creating Wallet 3 and sending 0.15 ETH to it...");
+    console.log("Creating Wallet 3 and sending 0.015 ETH to it...");
     const wallet3 = ethers.Wallet.createRandom().connect(ethers.provider);
     const tx5 = await wallet1.sendTransaction({
         to: wallet3.address,
