@@ -3,7 +3,7 @@ const { ethers } = require("hardhat");
 
 async function main() {
     // The address of the deployed NFT Marketplace contract
-    const marketplaceAddress = "0xbaB870169544Bd2759dAdb30fA04724ff2C6708D";
+    const marketplaceAddress = "0x3E9801B44695D0C7310549Dd5751a19C4691D448";
 
     // The addresses of wallet 1 and wallet 2
     const wallet1 = new ethers.Wallet(process.env.privateKey, ethers.provider);
@@ -16,7 +16,7 @@ async function main() {
     // Step 1: Wallet 1 mints an NFT with a tokenURI
     console.log("Wallet 1 is minting an NFT...");
     const tokenURI = "ipfs://yourtokenuri";
-    const price = ethers.utils.parseEther("0.01");
+    const price = ethers.utils.parseEther("0.001");
     const tx1 = await marketplaceContractWithWallet1.createToken(tokenURI, price, { value: price });
     const receipt1 = await tx1.wait();
     const tokenId = receipt1.events.find(event => event.event === "TokenListedSuccess").args.tokenId;
@@ -29,7 +29,7 @@ async function main() {
     console.log(`Wallet 2 has bought the NFT with tokenId: ${tokenId.toString()}`);
 
     // Step 3: Wallet 2 updates the token price by 10%
-    const updatedPrice = ethers.utils.parseEther("0.011");
+    const updatedPrice = ethers.utils.parseEther("0.0011");
     console.log("Wallet 2 is updating the token price...");
     const tx3 = await marketplaceContractWithWallet2.updateTokenPrice(tokenId, updatedPrice);
     await tx3.wait();
@@ -42,11 +42,22 @@ async function main() {
     await tx4.wait();
     console.log(`NFT listed for sale with new price: ${ethers.utils.formatEther(updatedPrice)} ETH`);
 
-    // Step 5: Wallet 1 buys the token from Wallet 2
-    console.log("Wallet 1 is buying the NFT back...");
-    const tx5 = await marketplaceContractWithWallet1.executeSale(tokenId, { value: updatedPrice });
+    // Step 5: Create Wallet 3 at runtime and send 0.15 ETH from Wallet 1 to Wallet 3
+    console.log("Creating Wallet 3 and sending 0.15 ETH to it...");
+    const wallet3 = ethers.Wallet.createRandom().connect(ethers.provider);
+    const tx5 = await wallet1.sendTransaction({
+        to: wallet3.address,
+        value: ethers.utils.parseEther("0.015"),
+    });
     await tx5.wait();
-    console.log(`Wallet 1 has bought back the NFT with tokenId: ${tokenId.toString()}`);
+    console.log(`0.15 ETH sent to Wallet 3 at address: ${wallet3.address}`);
+
+    // Step 6: Wallet 3 buys the token from Wallet 2
+    const marketplaceContractWithWallet3 = await ethers.getContractAt("NFTMarketplace", marketplaceAddress, wallet3);
+    console.log("Wallet 3 is buying the NFT...");
+    const tx6 = await marketplaceContractWithWallet3.executeSale(tokenId, { value: updatedPrice });
+    await tx6.wait();
+    console.log(`Wallet 3 has bought the NFT with tokenId: ${tokenId.toString()}`);
 }
 
 main()
