@@ -98,9 +98,28 @@ async function main() {
     }
 }
 
-main()
-    .then(() => process.exit(0))
+async function loop() {
+    while (true) {
+        try {
+            await main();
+            // If you want some delay between each iteration
+            // you can use the following line to pause for a specified time (e.g., 5 seconds)
+            // await new Promise(resolve => setTimeout(resolve, 5000));
+        } catch (error) {
+            console.error('An error occurred:', error);
+            // Decide how you want to handle errors; either:
+            // - continue with the next iteration, or
+            // - break out of the loop, or
+            // - retry the same step after a delay
+            // For example, to pause for 10 seconds before retrying, you could use:
+            // await new Promise(resolve => setTimeout(resolve, 10000));
+        }
+    }
+}
+
+loop()
+    .then(() => console.log("Loop has started"))
     .catch((error) => {
-        console.error(error);
+        console.error('Loop has encountered an error and stopped:', error);
         process.exit(1);
     });
