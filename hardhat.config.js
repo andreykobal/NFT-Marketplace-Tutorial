@@ -28,11 +28,11 @@ module.exports = {
     },
     goerli: {
       url: "https://ethereum-goerli.publicnode.com",
-      accounts: [process.env.privateKey, process.env.privateKey2]
+      accounts: [process.env.privateKey]
     },
-    ailandtestnet: {
-      url: "https://ailandtestnet-1699217576328100-1.jsonrpc.testnet-sp1.sagarpc.io",
-      accounts: [process.env.privateKey, process.env.privateKey2]
+    ethernity: {
+      url: "https://ethernity-2712684349646000-1.jsonrpc.sagarpc.io",
+      accounts: [process.env.privateKey]
     }
   },
   solidity: {

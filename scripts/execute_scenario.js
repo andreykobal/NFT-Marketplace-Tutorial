@@ -3,7 +3,7 @@ const { ethers } = require("hardhat");
 
 async function main() {
     // The address of the deployed NFT Marketplace contract
-    const marketplaceAddress = "0x9f109bD4cC26357184CF6b1f87cFaadd8233E432";
+    const marketplaceAddress = "0xaC7e4Ad5d7557B78ebc84Dff668A06709f5Dc62B";
 
     // The address of wallet 1
     const wallet1 = new ethers.Wallet(process.env.privateKey, ethers.provider);
